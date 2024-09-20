@@ -1,0 +1,16 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/ApplicationCore/bin/Debug
+/ApplicationCore/obj
+/Domain/bin/Debug/net5.0
+/Domain/obj
+/DomainTests/bin/Debug
+/DomainTests/obj
+/Infrastructure/bin/Debug
+/Infrastructure/obj
+/WebAPI/obj
+/WebAPI/bin/Debug
+/obj
+/.vs/League_Master
