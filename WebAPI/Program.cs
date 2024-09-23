@@ -10,6 +10,11 @@ using System.Text.Json.Serialization;
 using League_Master.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using ApplicationCore.Interfaces.ServiceInterfaces;
+using ApplicationCore.Services;
+using Infrastructure.Repositories;
+using ApplicationCore.Interfaces.RepositoryInterfaces;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 var LeagueMasterAllowSpecificOrigins = "_leagueMasterAllowSpecificOrigins";
@@ -53,7 +58,7 @@ builder.Services.AddAuthentication(IISDefaults.AuthenticationScheme);
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("LeagueMaster", new OpenApiInfo { Title = "LeagueMaster API", Version = "v1" });
-    c.SwaggerDoc("LeagueMasterBackoffice", new OpenApiInfo { Title = "LeagueMaster Backoffice API", Version = "v1" });
+    //c.SwaggerDoc("LeagueMasterBackoffice", new OpenApiInfo { Title = "LeagueMaster Backoffice API", Version = "v1" });
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -113,11 +118,38 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
+builder.Services.AddTransient<IAuthenticationRepository, AuthenticationRepository>(); 
+builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
+
+builder.Services.AddTransient<IPlayerRepository, PlayerRepository>();
+builder.Services.AddTransient<IPlayerService, PlayerService>();
+
+//builder.Services.AddTransient<ILeagueRepository, LeagueRepository>();
+//builder.Services.AddTransient<ILeagueService, LeagueService>();
+
 builder.Services.AddMvc();
 
 var app = builder.Build();
 
 app.UseCors(LeagueMasterAllowSpecificOrigins);
+
+//if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Localhost") || app.Environment.IsStaging())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI(c =>
+//    {
+//        c.SwaggerEndpoint("/swagger/Loyalty/swagger.json", "Loyalty API V1");
+//        c.SwaggerEndpoint("/swagger/Backoffice/swagger.json", "Backoffice API V1");
+//    });
+//}
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/LeagueMaster/swagger.json", "LeagueMaster API V1");
+    //c.SwaggerEndpoint("/swagger/LeagueMasterBackoffice/swagger.json", "LeagueMaster Backoffice API V1");
+});
 
 // add use auth zbog logina i tokena
 app.UseAuthentication();

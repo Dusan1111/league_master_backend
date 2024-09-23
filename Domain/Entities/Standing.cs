@@ -11,7 +11,7 @@ namespace Domain.Entites
         public int NumberOfLosses { get; set; }
         public int NumberOfDraws { get; set; }
         public int TotalPoints { get; set; }
-        public League? League { get; set; }
+        public League League { get; set; }
         public Team Team { get; set; }
 
         public Standing()

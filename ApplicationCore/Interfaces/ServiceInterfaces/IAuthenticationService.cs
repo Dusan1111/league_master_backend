@@ -1,12 +1,11 @@
 ﻿using Domain.Core.Responses;
 using System.Threading.Tasks;
 
-namespace Domain.Core.RepositoriesInterfaces.Authentification
+namespace ApplicationCore.Interfaces.ServiceInterfaces
 {
-    public interface IAuthenticationRepository
+    public interface IAuthenticationService
     {
         Task<LoginResponse> Login(string username, string password);
-        Task<LoginResponse> BackofficeLogin(string username, string password);
         Task<LoginResponse> RefreshToken(string accessToken, string refreshToken);
     }
 }

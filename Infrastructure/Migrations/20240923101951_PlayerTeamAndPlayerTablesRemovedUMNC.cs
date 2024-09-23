@@ -5,29 +5,18 @@
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class PlayerTeamManyToMany : Migration
+    public partial class PlayerTeamAndPlayerTablesRemovedUMNC : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Players_Teams_TeamId",
-                table: "Players");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Players_TeamId",
-                table: "Players");
+            migrationBuilder.DropColumn(
+                name: "UMNC",
+                table: "PlayerTeams");
 
             migrationBuilder.DropColumn(
-                name: "TeamId",
+                name: "UMNC",
                 table: "Players");
-
-            migrationBuilder.AddColumn<int>(
-                name: "NumberOfGamesPlayed",
-                table: "Standings",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
 
             migrationBuilder.CreateTable(
                 name: "PlayerTeam",
@@ -65,29 +54,17 @@ namespace Infrastructure.Migrations
             migrationBuilder.DropTable(
                 name: "PlayerTeam");
 
-            migrationBuilder.DropColumn(
-                name: "NumberOfGamesPlayed",
-                table: "Standings");
+            migrationBuilder.AddColumn<string>(
+                name: "UMNC",
+                table: "PlayerTeams",
+                type: "nvarchar(max)",
+                nullable: true);
 
-            migrationBuilder.AddColumn<int>(
-                name: "TeamId",
+            migrationBuilder.AddColumn<string>(
+                name: "UMNC",
                 table: "Players",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Players_TeamId",
-                table: "Players",
-                column: "TeamId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Players_Teams_TeamId",
-                table: "Players",
-                column: "TeamId",
-                principalTable: "Teams",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                type: "nvarchar(max)",
+                nullable: true);
         }
     }
 }

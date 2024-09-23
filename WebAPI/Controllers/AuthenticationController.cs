@@ -1,4 +1,4 @@
-﻿using Domain.Core.RepositoriesInterfaces.Authentification;
+﻿using ApplicationCore.Interfaces.ServiceInterfaces;
 using Domain.Core.Responses;
 using Domain.DTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -13,12 +13,12 @@ namespace League_Master.WebAPI.Controllers
     [Route("authorization")]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IAuthenticationRepository _authRepo;
+        private readonly IAuthenticationService _authService;
         private readonly ILogger<AuthenticationController> _logger;
 
-        public AuthenticationController(IAuthenticationRepository authRepo, ILogger<AuthenticationController> logger)
+        public AuthenticationController(IAuthenticationService authService, ILogger<AuthenticationController> logger)
         {
-            _authRepo = authRepo ?? throw new ArgumentNullException(nameof(authRepo));
+            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
             _logger = logger;
         }
 
@@ -29,7 +29,7 @@ namespace League_Master.WebAPI.Controllers
             try
             {
                 _logger.Log(LogLevel.Trace, $"[AuthentificationController] Login attempt for user: {request.UserName}.");
-                var response = await _authRepo.Login(request.UserName, request.Password);
+                var response = await _authService.Login(request.UserName, request.Password);
                 if (!response.Success)
                 {
                     _logger.Log(LogLevel.Warning, $"[AuthentificationController] Failed login attempt for user: {request.UserName}. Reason: {response.Message}");
@@ -72,7 +72,7 @@ namespace League_Master.WebAPI.Controllers
                 string accessToken = tokenDTO.AccessToken;
                 string refreshToken = tokenDTO.RefreshToken;
 
-                var response = await _authRepo.RefreshToken(accessToken, refreshToken);
+                var response = await _authService.RefreshToken(accessToken, refreshToken);
 
                 if (!response.Success)
                 {

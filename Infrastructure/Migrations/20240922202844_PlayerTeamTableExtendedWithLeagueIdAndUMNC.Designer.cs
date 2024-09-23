@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(LeagueMasterDbContext))]
-    [Migration("20240920064459_MatchLocatioIntroduced")]
-    partial class MatchLocatioIntroduced
+    [Migration("20240922202844_PlayerTeamTableExtendedWithLeagueIdAndUMNC")]
+    partial class PlayerTeamTableExtendedWithLeagueIdAndUMNC
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,6 +76,9 @@ namespace Infrastructure.Migrations
                     b.Property<int?>("AwayTeamGoals")
                         .HasColumnType("int");
 
+                    b.Property<string>("AwayTeamGoalsPlayerIds")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("AwayYellowCardsPlayerIds")
                         .HasColumnType("nvarchar(max)");
 
@@ -88,10 +91,16 @@ namespace Infrastructure.Migrations
                     b.Property<int?>("HomeTeamGoals")
                         .HasColumnType("int");
 
+                    b.Property<string>("HomeTeamGoalsPlayerIds")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("HomeYellowCardsPlayerIds")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MatchLocationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PlayerOfTheGameId")
                         .HasColumnType("int");
 
                     b.Property<int>("RoundId")
@@ -123,9 +132,6 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("JerseyNumber")
                         .HasColumnType("int");
 
@@ -156,8 +162,14 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Position")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("SuspendedUntil")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("SuspendedFromRound")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SuspendedUntilRound")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UMNC")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -254,6 +266,15 @@ namespace Infrastructure.Migrations
                     b.Property<int>("LeagueId")
                         .HasColumnType("int");
 
+                    b.Property<byte[]>("LogoImage")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("MaxNumberOfPlayers")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinNumberOfPlayers")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -318,19 +339,33 @@ namespace Infrastructure.Migrations
                     b.ToTable("MatchLocation");
                 });
 
-            modelBuilder.Entity("PlayerTeam", b =>
+            modelBuilder.Entity("Domain.Entities.PlayerTeam", b =>
                 {
-                    b.Property<int>("PlayersId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("TeamsId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("LeagueId")
                         .HasColumnType("int");
 
-                    b.HasKey("PlayersId", "TeamsId");
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("TeamsId");
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
 
-                    b.ToTable("PlayerTeam");
+                    b.Property<string>("UMNC")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("PlayerTeams");
                 });
 
             modelBuilder.Entity("Domain.Entites.League", b =>
@@ -425,19 +460,23 @@ namespace Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("PlayerTeam", b =>
+            modelBuilder.Entity("Domain.Entities.PlayerTeam", b =>
                 {
-                    b.HasOne("Domain.Entites.Player", null)
-                        .WithMany()
-                        .HasForeignKey("PlayersId")
+                    b.HasOne("Domain.Entites.Player", "Player")
+                        .WithMany("PlayerTeams")
+                        .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entites.Team", null)
-                        .WithMany()
-                        .HasForeignKey("TeamsId")
+                    b.HasOne("Domain.Entites.Team", "Team")
+                        .WithMany("PlayerTeams")
+                        .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Player");
+
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("Domain.Entites.Company", b =>
@@ -454,6 +493,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("Teams");
                 });
 
+            modelBuilder.Entity("Domain.Entites.Player", b =>
+                {
+                    b.Navigation("PlayerTeams");
+                });
+
             modelBuilder.Entity("Domain.Entites.Standing", b =>
                 {
                     b.Navigation("Team");
@@ -462,6 +506,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entites.Team", b =>
                 {
                     b.Navigation("Matches");
+
+                    b.Navigation("PlayerTeams");
                 });
 
             modelBuilder.Entity("Domain.Entities.MatchLocation", b =>
