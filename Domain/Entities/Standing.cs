@@ -13,10 +13,5 @@ namespace Domain.Entites
         public int TotalPoints { get; set; }
         public League League { get; set; }
         public Team Team { get; set; }
-
-        public Standing()
-        {
-
-        }
     }
 }

@@ -18,17 +18,9 @@ namespace Domain.Entites
         public string AwayYellowCardsPlayerIds { get; set; }
         public string AwayRedCardsPlayerIds { get; set; }
         public int? PlayerOfTheGameId { get; set; }
-        public int RoundId { get; set; }
-        public Round Round { get; set; }
+        public int SeasonLeagueId { get; set; }
+        public SeasonLeague SeasonLeague { get; set; }
         public int MatchLocationId { get; set; }
         public MatchLocation MatchLocation { get; set; }
-        
-        /// <summary>
-        /// Add away and home teams
-        /// </summary>
-        public Match()
-        {
-
-        }
     }
 }

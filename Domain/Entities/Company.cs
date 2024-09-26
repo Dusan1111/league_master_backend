@@ -8,10 +8,5 @@ namespace Domain.Entites
         public string Name { get; set; }
         public List<User> Users { get; set; }
         public List<League> Leagues { get; set; }
-
-        public Company()
-        {
-
-        }
     }
 }

@@ -30,6 +30,8 @@ namespace League_Master.Infrastructure
         public DbSet<Match> Matches { get; set; }
         public DbSet<Standing> Standings { get; set; }
         public DbSet<PlayerTeam> PlayerTeams { get; set; }
+        public DbSet<Season> Seasons { get; set; }
+        public DbSet<SeasonLeague> SeasonLeagues { get; set; }
 
     }
 }

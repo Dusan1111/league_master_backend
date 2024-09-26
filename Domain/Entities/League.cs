@@ -1,3 +1,4 @@
+using Domain.Entities;
 using System.Collections.Generic;
 
 namespace Domain.Entites
@@ -8,12 +9,6 @@ namespace Domain.Entites
         public string Name { get; set; }
         public int CompanyId { get; set; }
         public Company Company { get; set; }
-        public List<Round> Rounds { get; set; }
-        public List<Team> Teams { get; set; }
-
-        public League()
-        {
-
-        }
+        public List<SeasonLeague> SeasonLeagues { get; }
     }
 }

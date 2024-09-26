@@ -45,8 +45,6 @@ namespace Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Lastname = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Position = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    JerseyNumber = table.Column<int>(type: "int", nullable: false),
                     NumberOfYellowCards = table.Column<int>(type: "int", nullable: true),
                     NumberOfRedCards = table.Column<int>(type: "int", nullable: true),
                     NumberOfTotalYellowCards = table.Column<int>(type: "int", nullable: true),
@@ -72,6 +70,21 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Seasons",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Seasons", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -130,7 +143,8 @@ namespace Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LeagueId = table.Column<int>(type: "int", nullable: false)
+                    SeasonId = table.Column<int>(type: "int", nullable: false),
+                    LeagueId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -139,6 +153,37 @@ namespace Infrastructure.Migrations
                         name: "FK_Rounds_Leagues_LeagueId",
                         column: x => x.LeagueId,
                         principalTable: "Leagues",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Rounds_Seasons_SeasonId",
+                        column: x => x.SeasonId,
+                        principalTable: "Seasons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SeasonLeague",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SeasonId = table.Column<int>(type: "int", nullable: false),
+                    LeagueId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SeasonLeague", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SeasonLeague_Leagues_LeagueId",
+                        column: x => x.LeagueId,
+                        principalTable: "Leagues",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SeasonLeague_Seasons_SeasonId",
+                        column: x => x.SeasonId,
+                        principalTable: "Seasons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -176,11 +221,11 @@ namespace Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LeagueId = table.Column<int>(type: "int", nullable: false),
                     StandingId = table.Column<int>(type: "int", nullable: false),
                     MaxNumberOfPlayers = table.Column<int>(type: "int", nullable: false),
                     MinNumberOfPlayers = table.Column<int>(type: "int", nullable: false),
-                    LogoImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                    LogoImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    LeagueId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -189,8 +234,7 @@ namespace Infrastructure.Migrations
                         name: "FK_Teams_Leagues_LeagueId",
                         column: x => x.LeagueId,
                         principalTable: "Leagues",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Teams_Standings_StandingId",
                         column: x => x.StandingId,
@@ -243,37 +287,14 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PlayerTeam",
-                columns: table => new
-                {
-                    PlayersId = table.Column<int>(type: "int", nullable: false),
-                    TeamsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PlayerTeam", x => new { x.PlayersId, x.TeamsId });
-                    table.ForeignKey(
-                        name: "FK_PlayerTeam_Players_PlayersId",
-                        column: x => x.PlayersId,
-                        principalTable: "Players",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PlayerTeam_Teams_TeamsId",
-                        column: x => x.TeamsId,
-                        principalTable: "Teams",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PlayerTeams",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PlayerId = table.Column<int>(type: "int", nullable: false),
-                    TeamId = table.Column<int>(type: "int", nullable: false)
+                    TeamId = table.Column<int>(type: "int", nullable: false),
+                    LeagueId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -287,6 +308,30 @@ namespace Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_PlayerTeams_Teams_TeamId",
                         column: x => x.TeamId,
+                        principalTable: "Teams",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SeasonTeam",
+                columns: table => new
+                {
+                    SeasonsId = table.Column<int>(type: "int", nullable: false),
+                    TeamsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SeasonTeam", x => new { x.SeasonsId, x.TeamsId });
+                    table.ForeignKey(
+                        name: "FK_SeasonTeam_Seasons_SeasonsId",
+                        column: x => x.SeasonsId,
+                        principalTable: "Seasons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SeasonTeam_Teams_TeamsId",
+                        column: x => x.TeamsId,
                         principalTable: "Teams",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -314,11 +359,6 @@ namespace Infrastructure.Migrations
                 column: "TeamId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PlayerTeam_TeamsId",
-                table: "PlayerTeam",
-                column: "TeamsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PlayerTeams_PlayerId",
                 table: "PlayerTeams",
                 column: "PlayerId");
@@ -332,6 +372,26 @@ namespace Infrastructure.Migrations
                 name: "IX_Rounds_LeagueId",
                 table: "Rounds",
                 column: "LeagueId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rounds_SeasonId",
+                table: "Rounds",
+                column: "SeasonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SeasonLeague_LeagueId",
+                table: "SeasonLeague",
+                column: "LeagueId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SeasonLeague_SeasonId",
+                table: "SeasonLeague",
+                column: "SeasonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SeasonTeam_TeamsId",
+                table: "SeasonTeam",
+                column: "TeamsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Standings_LeagueId",
@@ -367,10 +427,13 @@ namespace Infrastructure.Migrations
                 name: "Matches");
 
             migrationBuilder.DropTable(
-                name: "PlayerTeam");
+                name: "PlayerTeams");
 
             migrationBuilder.DropTable(
-                name: "PlayerTeams");
+                name: "SeasonLeague");
+
+            migrationBuilder.DropTable(
+                name: "SeasonTeam");
 
             migrationBuilder.DropTable(
                 name: "Users");
@@ -389,6 +452,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Seasons");
 
             migrationBuilder.DropTable(
                 name: "Standings");

@@ -19,15 +19,16 @@ namespace Infrastructure.Repositories
         {
             var addedLeague = await _dbContext.Leagues.AddAsync(leagueToAdd);
 
-            for(int i = 1; i <= numberOfRounds; i++)
-            {
-                var addedRound = new Round()
-                {
-                    LeagueId = addedLeague.Entity.Id,
-                    Name = "Kolo " + i
-                };
-                await _dbContext.Rounds.AddAsync(addedRound);
-            }
+           // Ovo pomeriti u kreate new season metodu
+            //for(int i = 1; i <= numberOfRounds; i++)
+            //{
+            //    var addedRound = new Round()
+            //    {
+            //        SeasonId = addedLeague.Entity.Id,
+            //        Name = "Kolo " + i
+            //    };
+            //    await _dbContext.Rounds.AddAsync(addedRound);
+            //}
             try
             {
                 var result = _dbContext.SaveChangesAsync();

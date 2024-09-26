@@ -5,6 +5,7 @@ using League_Master.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 
@@ -23,7 +24,8 @@ namespace Infrastructure.Repositories
         {
             var newStanding = new Standing();
             var result = 0;
-
+            var activeSeason = newTeam.SeasonLeagues.LastOrDefault().Season;
+            //var activeSeasonId = .Id;
             using (var dbContextTransaction = _dbContext.Database.BeginTransaction())
             {
                 try
@@ -43,7 +45,7 @@ namespace Infrastructure.Repositories
                             {
                                 var playerTeam = new PlayerTeam()
                                 {
-                                    LeagueId = newTeam.LeagueId,
+                                  //  SeasonId = activeSeason.Id,
                                     PlayerId = newPlayer.Id,
                                     TeamId = newTeam.Id
                                 };
