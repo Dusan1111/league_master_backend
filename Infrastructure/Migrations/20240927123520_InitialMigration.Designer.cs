@@ -4,6 +4,7 @@ using League_Master.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(LeagueMasterDbContext))]
-    partial class LeagueMasterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240927123520_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +34,6 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -51,7 +53,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SportId")
@@ -114,11 +115,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Lastname")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SuspendedFromRound")
@@ -141,7 +140,6 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -161,7 +159,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -182,6 +179,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("GoalsDifference")
                         .HasColumnType("int");
 
+                    b.Property<int?>("LeagueId")
+                        .HasColumnType("int");
+
                     b.Property<int>("NumberOfDraws")
                         .HasColumnType("int");
 
@@ -200,15 +200,12 @@ namespace Infrastructure.Migrations
                     b.Property<int>("ScoredGoals")
                         .HasColumnType("int");
 
-                    b.Property<int>("TeamId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TotalPoints")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TeamId");
+                    b.HasIndex("LeagueId");
 
                     b.ToTable("Standings");
                 });
@@ -222,7 +219,6 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<byte[]>("LogoImage")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int>("MaxNumberOfPlayers")
@@ -232,10 +228,15 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("StandingId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("StandingId")
+                        .IsUnique();
 
                     b.ToTable("Teams");
                 });
@@ -252,18 +253,15 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<string>("Username")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -284,7 +282,6 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -327,7 +324,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PlayerMatchId")
@@ -383,7 +379,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartDate")
@@ -406,13 +401,12 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("RoundName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SeasonId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TeamId")
+                    b.Property<int?>("TeamId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -435,7 +429,6 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -452,7 +445,6 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -511,13 +503,22 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entites.Standing", b =>
                 {
-                    b.HasOne("Domain.Entites.Team", "Team")
+                    b.HasOne("Domain.Entites.League", "League")
                         .WithMany()
-                        .HasForeignKey("TeamId")
+                        .HasForeignKey("LeagueId");
+
+                    b.Navigation("League");
+                });
+
+            modelBuilder.Entity("Domain.Entites.Team", b =>
+                {
+                    b.HasOne("Domain.Entites.Standing", "Standing")
+                        .WithOne("Team")
+                        .HasForeignKey("Domain.Entites.Team", "StandingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Team");
+                    b.Navigation("Standing");
                 });
 
             modelBuilder.Entity("Domain.Entites.User", b =>
@@ -612,9 +613,7 @@ namespace Infrastructure.Migrations
 
                     b.HasOne("Domain.Entites.Team", null)
                         .WithMany("SeasonLeagues")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TeamId");
                 });
 
             modelBuilder.Entity("Domain.Entites.Company", b =>
@@ -636,6 +635,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("PlayerTeams");
                 });
 
+            modelBuilder.Entity("Domain.Entites.Standing", b =>
+                {
+                    b.Navigation("Team");
+                });
+
             modelBuilder.Entity("Domain.Entites.Team", b =>
                 {
                     b.Navigation("PlayerTeams");
@@ -645,8 +649,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.MatchLocation", b =>
                 {
-                    b.Navigation("Match")
-                        .IsRequired();
+                    b.Navigation("Match");
                 });
 
             modelBuilder.Entity("Domain.Entities.Season", b =>

@@ -1,8 +1,16 @@
-namespace Domain.Entites
+﻿using Domain.Entites;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Domain.DTOs
 {
-    public class Standing
+    public class LeagueStandingRecordDTO
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
+        public int LeaguePosition { get; set; }
         public int ScoredGoals { get; set; }
         public int ReceivedGoals { get; set; }
         public int GoalsDifference { get; set; }
@@ -12,6 +20,6 @@ namespace Domain.Entites
         public int NumberOfDraws { get; set; }
         public int TotalPoints { get; set; }
         public int TeamId { get; set; }
-        public Team Team { get; set; }
+        public string TeamName { get; set; }
     }
 }

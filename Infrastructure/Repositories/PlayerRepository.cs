@@ -4,7 +4,7 @@ using Domain.Entities;
 using League_Master.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
@@ -65,9 +65,26 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public Task<int> DeletePlayer(int playerId)
+        public async Task<int> DeletePlayer(int playerId)
         {
-            throw new NotImplementedException();
+            var playerForDelete = await _dbContext.Players.FindAsync(playerId);
+                                                    
+            var playerTeamForDelete = await _dbContext.PlayerTeams
+                .Where(x => x.PlayerId== playerId)
+                .FirstOrDefaultAsync();
+
+            if (playerTeamForDelete is not null)
+            {
+                _dbContext.PlayerTeams.Remove(playerTeamForDelete);
+            }
+            if (playerForDelete is not null)
+            {
+                _dbContext.Players.Remove(playerForDelete);
+
+                return await _dbContext.SaveChangesAsync();
+            }
+
+            return 0;
         }
 
         public async Task<Player> GetPlayerDetails(int playerId)
@@ -75,9 +92,21 @@ namespace Infrastructure.Repositories
             return await _dbContext.Players.FindAsync(playerId);
         }
 
-        public Task<int> UpdatePlayer(int playerId, Player playerToUpdate)
+        public async Task<int> UpdatePlayer(int playerId, Player playerToUpdate)
         {
-            throw new NotImplementedException();
+            var updatedPlayer = await _dbContext.Players.FirstOrDefaultAsync(player => player.Id == playerId);
+
+            if (updatedPlayer is not null)
+            {
+                updatedPlayer.Name = playerToUpdate.Name;
+                updatedPlayer.JerseyNumber = playerToUpdate.JerseyNumber;
+                updatedPlayer.SuspendedFromRound = playerToUpdate.SuspendedFromRound;
+                updatedPlayer.SuspendedUntilRound = playerToUpdate.SuspendedUntilRound;
+
+                return await _dbContext.SaveChangesAsync();
+            }
+
+            return -1;
         }
 
         private async Task<bool> DoesTeamExist(int teamId)
@@ -89,7 +118,7 @@ namespace Infrastructure.Repositories
         private async Task<bool> DoesLeagueExist(int leagueId)
         {
             return await _dbContext.Leagues
-               .AnyAsync(league => league.Id == leagueId);
+                .AnyAsync(league => league.Id == leagueId);
         }
 
         private async Task<bool> IsPlayerRegisteredInTheLeagueForOtherTeam(int leagueId, int teamId, string firstName, string lastName)

@@ -32,6 +32,9 @@ namespace League_Master.Infrastructure
         public DbSet<PlayerTeam> PlayerTeams { get; set; }
         public DbSet<Season> Seasons { get; set; }
         public DbSet<SeasonLeague> SeasonLeagues { get; set; }
-
+        public DbSet<StatisticalCategory> StatisticalCategories { get; set; }
+        public DbSet<PlayerStatistics> PlayerStatistics { get; set; }
+        public DbSet<MatchLocation> MatchLocations { get; set; }
+        public DbSet<Sport> Sports { get; set; }
     }
 }

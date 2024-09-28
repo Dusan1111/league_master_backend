@@ -125,6 +125,12 @@ builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 builder.Services.AddTransient<IPlayerRepository, PlayerRepository>();
 builder.Services.AddTransient<IPlayerService, PlayerService>();
 
+builder.Services.AddTransient<ITeamRepository, TeamRepository>();
+builder.Services.AddTransient<ITeamService, TeamService>();
+
+builder.Services.AddTransient<IStatisticsRepository, StatisticsRepository>();
+builder.Services.AddTransient<IStatisticsService, StatisticsService>();
+
 //builder.Services.AddTransient<ILeagueRepository, LeagueRepository>();
 //builder.Services.AddTransient<ILeagueService, LeagueService>();
 

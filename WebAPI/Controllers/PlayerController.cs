@@ -5,6 +5,8 @@ using System;
 using Microsoft.Extensions.Logging;
 using ApplicationCore.Interfaces.ServiceInterfaces;
 using Domain.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {
@@ -22,7 +24,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("Add")]
-     //   [Authorize(Policy = "RequireAdministratorRole")]
+        //   [Authorize(Policy = "RequireAdministratorRole")]
         public async Task<ActionResult<ResponseBase>> AddAsync(PlayerCreateDTO playerCreateDTO)
         {
             try
@@ -48,6 +50,47 @@ namespace WebAPI.Controllers
             try
             {
                 var response = await _playerService.GetPlayerDetails(playerId);
+
+                if (!response.Success)
+                {
+                    return BadRequest(response);
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("{playerId}")]
+        public async Task<ActionResult<ResponseBase>> UpdatePlayerAsync(int playerId, PlayerCreateDTO playerToUpdate)
+        {
+            try
+            {
+                var response = await _playerService.UpdatePlayer(playerId, playerToUpdate);
+
+                if (!response.Success)
+                {
+                    return BadRequest(response);
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpDelete("{playerId}")]
+        public async Task<ActionResult<ResponseBase>> DeletePlayerAsync(int playerId)
+        {
+            try
+            {
+                var response = await _playerService.DeletePlayer(playerId);
 
                 if (!response.Success)
                 {

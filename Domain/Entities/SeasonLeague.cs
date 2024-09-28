@@ -1,5 +1,4 @@
 ﻿using Domain.Entites;
-using System.Collections.Generic;
 
 namespace Domain.Entities
 {
@@ -11,6 +10,7 @@ namespace Domain.Entities
         public int LeagueId { get; set; }
         public League League { get; }
         public string RoundName { get; set; }
-        public List<Team> Teams { get; set; }
+        public int TeamId { get; set; }
+        public Team Team { get; }
     }
 }

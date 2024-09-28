@@ -6,10 +6,5 @@ namespace Domain.Entites
         public string Name { get; set; }
         public int LeagueId { get; set; }
         public League League { get; set; }
-
-        public Round()
-        {
-
-        }
     }
 }

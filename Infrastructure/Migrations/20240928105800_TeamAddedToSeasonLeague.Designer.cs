@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(LeagueMasterDbContext))]
-    [Migration("20240925175524_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240928105800_TeamAddedToSeasonLeague")]
+    partial class TeamAddedToSeasonLeague
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,7 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -53,11 +54,17 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SportId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
+
+                    b.HasIndex("SportId");
 
                     b.ToTable("Leagues");
                 });
@@ -70,56 +77,30 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AwayRedCardsPlayerIds")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("AwayTeamGoals")
                         .HasColumnType("int");
-
-                    b.Property<string>("AwayTeamGoalsPlayerIds")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AwayYellowCardsPlayerIds")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("EndDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("HomeRedCardsPlayerIds")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("HomeTeamGoals")
                         .HasColumnType("int");
-
-                    b.Property<string>("HomeTeamGoalsPlayerIds")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HomeYellowCardsPlayerIds")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MatchLocationId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PlayerOfTheGameId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoundId")
+                    b.Property<int>("SeasonLeagueId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDateTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("TeamId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MatchLocationId")
                         .IsUnique();
 
-                    b.HasIndex("RoundId");
-
-                    b.HasIndex("TeamId");
+                    b.HasIndex("SeasonLeagueId");
 
                     b.ToTable("Matches");
                 });
@@ -132,29 +113,16 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("JerseyNumber")
+                        .HasColumnType("int");
+
                     b.Property<string>("Lastname")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("NumberOfAssists")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NumberOfGoals")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NumberOfRedCards")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NumberOfTotalRedCards")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NumberOfTotalYellowCards")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NumberOfYellowCards")
-                        .HasColumnType("int");
 
                     b.Property<int>("SuspendedFromRound")
                         .HasColumnType("int");
@@ -176,6 +144,7 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -191,20 +160,16 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("LeagueId")
+                    b.Property<int>("LeagueId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SeasonId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LeagueId");
-
-                    b.HasIndex("SeasonId");
 
                     b.ToTable("Rounds");
                 });
@@ -218,9 +183,6 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("GoalsDifference")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("LeagueId")
                         .HasColumnType("int");
 
                     b.Property<int>("NumberOfDraws")
@@ -241,12 +203,15 @@ namespace Infrastructure.Migrations
                     b.Property<int>("ScoredGoals")
                         .HasColumnType("int");
 
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TotalPoints")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LeagueId");
+                    b.HasIndex("TeamId");
 
                     b.ToTable("Standings");
                 });
@@ -259,10 +224,8 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("LeagueId")
-                        .HasColumnType("int");
-
                     b.Property<byte[]>("LogoImage")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int>("MaxNumberOfPlayers")
@@ -272,17 +235,10 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StandingId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("LeagueId");
-
-                    b.HasIndex("StandingId")
-                        .IsUnique();
 
                     b.ToTable("Teams");
                 });
@@ -299,15 +255,18 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<string>("Username")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -328,11 +287,65 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("MatchLocation");
+                    b.ToTable("MatchLocations");
+                });
+
+            modelBuilder.Entity("Domain.Entities.PlayerMatch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MatchId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MatchId");
+
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("PlayerMatch");
+                });
+
+            modelBuilder.Entity("Domain.Entities.PlayerStatistics", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AcquiredMinute")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PlayerMatchId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatisticalCategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerMatchId");
+
+                    b.HasIndex("StatisticalCategoryId");
+
+                    b.ToTable("PlayerStatistics");
                 });
 
             modelBuilder.Entity("Domain.Entities.PlayerTeam", b =>
@@ -373,6 +386,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartDate")
@@ -394,7 +408,14 @@ namespace Infrastructure.Migrations
                     b.Property<int>("LeagueId")
                         .HasColumnType("int");
 
+                    b.Property<string>("RoundName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("SeasonId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeamId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -403,22 +424,43 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("SeasonId");
 
-                    b.ToTable("SeasonLeague");
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("SeasonLeagues");
                 });
 
-            modelBuilder.Entity("SeasonTeam", b =>
+            modelBuilder.Entity("Domain.Entities.Sport", b =>
                 {
-                    b.Property<int>("SeasonsId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("TeamsId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sports");
+                });
+
+            modelBuilder.Entity("Domain.Entities.StatisticalCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.HasKey("SeasonsId", "TeamsId");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.HasIndex("TeamsId");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("SeasonTeam");
+                    b.HasKey("Id");
+
+                    b.ToTable("StatisticalCategories");
                 });
 
             modelBuilder.Entity("Domain.Entites.League", b =>
@@ -429,7 +471,15 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.Sport", "Sport")
+                        .WithMany()
+                        .HasForeignKey("SportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Company");
+
+                    b.Navigation("Sport");
                 });
 
             modelBuilder.Entity("Domain.Entites.Match", b =>
@@ -440,58 +490,37 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entites.Round", "Round")
+                    b.HasOne("Domain.Entities.SeasonLeague", "SeasonLeague")
                         .WithMany()
-                        .HasForeignKey("RoundId")
+                        .HasForeignKey("SeasonLeagueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entites.Team", null)
-                        .WithMany("Matches")
-                        .HasForeignKey("TeamId");
-
                     b.Navigation("MatchLocation");
 
-                    b.Navigation("Round");
+                    b.Navigation("SeasonLeague");
                 });
 
             modelBuilder.Entity("Domain.Entites.Round", b =>
                 {
-                    b.HasOne("Domain.Entites.League", null)
-                        .WithMany("Rounds")
-                        .HasForeignKey("LeagueId");
-
-                    b.HasOne("Domain.Entities.Season", "Season")
-                        .WithMany("Rounds")
-                        .HasForeignKey("SeasonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Season");
-                });
-
-            modelBuilder.Entity("Domain.Entites.Standing", b =>
-                {
                     b.HasOne("Domain.Entites.League", "League")
                         .WithMany()
-                        .HasForeignKey("LeagueId");
+                        .HasForeignKey("LeagueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("League");
                 });
 
-            modelBuilder.Entity("Domain.Entites.Team", b =>
+            modelBuilder.Entity("Domain.Entites.Standing", b =>
                 {
-                    b.HasOne("Domain.Entites.League", null)
-                        .WithMany("Teams")
-                        .HasForeignKey("LeagueId");
-
-                    b.HasOne("Domain.Entites.Standing", "Standing")
-                        .WithOne("Team")
-                        .HasForeignKey("Domain.Entites.Team", "StandingId")
+                    b.HasOne("Domain.Entites.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Standing");
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("Domain.Entites.User", b =>
@@ -511,6 +540,44 @@ namespace Infrastructure.Migrations
                     b.Navigation("Company");
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("Domain.Entities.PlayerMatch", b =>
+                {
+                    b.HasOne("Domain.Entites.Match", "Match")
+                        .WithMany()
+                        .HasForeignKey("MatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Player", "Player")
+                        .WithMany("PlayerMatches")
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Match");
+
+                    b.Navigation("Player");
+                });
+
+            modelBuilder.Entity("Domain.Entities.PlayerStatistics", b =>
+                {
+                    b.HasOne("Domain.Entities.PlayerMatch", "PlayerMatch")
+                        .WithMany()
+                        .HasForeignKey("PlayerMatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.StatisticalCategory", "StatisticalCategory")
+                        .WithMany()
+                        .HasForeignKey("StatisticalCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PlayerMatch");
+
+                    b.Navigation("StatisticalCategory");
                 });
 
             modelBuilder.Entity("Domain.Entities.PlayerTeam", b =>
@@ -545,19 +612,10 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("SeasonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("SeasonTeam", b =>
-                {
-                    b.HasOne("Domain.Entities.Season", null)
-                        .WithMany()
-                        .HasForeignKey("SeasonsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.HasOne("Domain.Entites.Team", null)
-                        .WithMany()
-                        .HasForeignKey("TeamsId")
+                        .WithMany("SeasonLeagues")
+                        .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -571,39 +629,31 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entites.League", b =>
                 {
-                    b.Navigation("Rounds");
-
                     b.Navigation("SeasonLeagues");
-
-                    b.Navigation("Teams");
                 });
 
             modelBuilder.Entity("Domain.Entites.Player", b =>
                 {
-                    b.Navigation("PlayerTeams");
-                });
+                    b.Navigation("PlayerMatches");
 
-            modelBuilder.Entity("Domain.Entites.Standing", b =>
-                {
-                    b.Navigation("Team");
+                    b.Navigation("PlayerTeams");
                 });
 
             modelBuilder.Entity("Domain.Entites.Team", b =>
                 {
-                    b.Navigation("Matches");
-
                     b.Navigation("PlayerTeams");
+
+                    b.Navigation("SeasonLeagues");
                 });
 
             modelBuilder.Entity("Domain.Entities.MatchLocation", b =>
                 {
-                    b.Navigation("Match");
+                    b.Navigation("Match")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.Season", b =>
                 {
-                    b.Navigation("Rounds");
-
                     b.Navigation("SeasonLeagues");
                 });
 #pragma warning restore 612, 618

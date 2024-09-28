@@ -6,7 +6,7 @@ namespace ApplicationCore.Interfaces.RepositoryInterfaces
 {
     public interface ITeamRepository
     {
-        Task<int> AddNewTeam(Team newTeam, List<Player> newPlayers);
+        Task<int> AddNewTeam(Team newTeam);
         Task<int> UpdateTeam(int teamId, Team teamToUpdate);
         Task<Team> GetTeamDetails(int teamId);
         Task<int> DeleteTeam(int teamId);

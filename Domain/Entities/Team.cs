@@ -7,13 +7,11 @@ namespace Domain.Entites
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<SeasonLeague> SeasonLeagues { get; set; }
-        public int StandingId { get; set; }
-        public Standing Standing { get; set; }
-        public ICollection<Match> Matches { get; set; }
         public int MaxNumberOfPlayers { get; set; }
         public int MinNumberOfPlayers { get; set; }
         public byte[] LogoImage { get; set; }
-        public List<PlayerTeam> PlayerTeams { get; }
+      
+        public List<SeasonLeague> SeasonLeagues { get; set; }
+        public List<PlayerTeam> PlayerTeams { get; }  
     }
 }

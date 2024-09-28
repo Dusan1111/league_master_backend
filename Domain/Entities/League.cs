@@ -7,8 +7,8 @@ namespace Domain.Entites
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int CompanyId { get; set; }
-        public Company Company { get; set; }
+        public int SportId { get; set; }
+        public Sport Sport { get; set; }
         public List<SeasonLeague> SeasonLeagues { get; }
     }
 }
