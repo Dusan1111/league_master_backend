@@ -21,10 +21,11 @@ namespace Infrastructure.Repositories
 
         public async Task<List<Standing>> GetLeagueStandings(int leagueId, int seasonId)
         {
-            var teamsInLeagueIds =  await _dbContext.SeasonLeagues
-                .Where(sl => sl.LeagueId == leagueId && sl.SeasonId == seasonId)
+            var teamsInLeagueIds =  await _dbContext.TeamLeagues
+               .Where(sl => sl.LeagueId == leagueId)
                 .Select(x => x.TeamId)
-                .ToListAsync();
+               .Select(x => x.Id)
+               .ToListAsync();
 
             return await _dbContext.Standings
                  .Where(standing => teamsInLeagueIds.Contains(standing.Id))

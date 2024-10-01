@@ -10,8 +10,9 @@ namespace Domain.Entites
         public DateTime EndDateTime { get; set; }
         public int? HomeTeamGoals { get; set; }
         public int? AwayTeamGoals { get; set; }
-        public int SeasonLeagueId { get; set; }
-        public SeasonLeague SeasonLeague { get; set; }
+
+        public int RoundId { get; set; }
+        public Round Round { get; set; }
         public int MatchLocationId { get; set; }
         public MatchLocation MatchLocation { get; set; }
     }

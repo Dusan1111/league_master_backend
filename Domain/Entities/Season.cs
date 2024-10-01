@@ -1,6 +1,5 @@
 ﻿using Domain.Entites;
 using System;
-using System.Collections.Generic;
 
 namespace Domain.Entities
 {
@@ -10,7 +9,8 @@ namespace Domain.Entities
         public string Name { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public List<SeasonLeague> SeasonLeagues { get; }
-        
+        public int CompanyId { get; set; }
+        public Company Company { get; set; }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Interfaces.RepositoryInterfaces;
 using Domain.Entites;
+using Domain.Entities;
 using League_Master.Infrastructure;
 using System;
 using System.Threading.Tasks;
@@ -15,21 +16,30 @@ namespace Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<int> AddNewTeam(Team newTeam)
+        public async Task<int> AddNewTeam(Team newTeam, int leagueId)
         {
             var newStanding = new Standing();
+            var newTeamLeague = new TeamLeague();
             var result = 0;
+
             using (var dbContextTransaction = _dbContext.Database.BeginTransaction())
             {
                 try
                 {
-                   var addNewTeamResult = await _dbContext.Teams.AddAsync(newTeam);
+                    var addNewTeamResult = await _dbContext.Teams.AddAsync(newTeam);
                     result = await _dbContext.SaveChangesAsync();
    
                     if (result > 0)
-                    {
-                        newStanding.TeamId = addNewTeamResult.Entity.Id;
-                        var newStandingResult = _dbContext.Standings.AddAsync(newStanding);
+                    {                              
+                        var addedTeamId = addNewTeamResult.Entity.Id;
+                        newStanding.TeamId = addedTeamId;
+                        await _dbContext.Standings.AddAsync(newStanding);
+
+                        newTeamLeague.TeamId = addedTeamId;
+                        newTeamLeague.LeagueId = leagueId;
+
+                        var addTeamToLeagueResult = await _dbContext.TeamLeagues.AddAsync(newTeamLeague);
+                        
                         result = await _dbContext.SaveChangesAsync();
 
                     }

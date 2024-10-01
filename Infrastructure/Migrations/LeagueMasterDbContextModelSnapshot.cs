@@ -47,12 +47,15 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CompanyId")
+                    b.Property<int?>("CompanyId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SeasonId")
+                        .HasColumnType("int");
 
                     b.Property<int>("SportId")
                         .HasColumnType("int");
@@ -60,6 +63,8 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
+
+                    b.HasIndex("SeasonId");
 
                     b.HasIndex("SportId");
 
@@ -86,7 +91,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("MatchLocationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SeasonLeagueId")
+                    b.Property<int>("RoundId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDateTime")
@@ -97,7 +102,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("MatchLocationId")
                         .IsUnique();
 
-                    b.HasIndex("SeasonLeagueId");
+                    b.HasIndex("RoundId");
 
                     b.ToTable("Matches");
                 });
@@ -379,6 +384,9 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
@@ -391,39 +399,9 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyId");
+
                     b.ToTable("Seasons");
-                });
-
-            modelBuilder.Entity("Domain.Entities.SeasonLeague", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("LeagueId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RoundName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SeasonId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeamId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LeagueId");
-
-                    b.HasIndex("SeasonId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("SeasonLeagues");
                 });
 
             modelBuilder.Entity("Domain.Entities.Sport", b =>
@@ -460,11 +438,36 @@ namespace Infrastructure.Migrations
                     b.ToTable("StatisticalCategories");
                 });
 
+            modelBuilder.Entity("Domain.Entities.TeamLeague", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("LeagueId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("TeamLeagues");
+                });
+
             modelBuilder.Entity("Domain.Entites.League", b =>
                 {
-                    b.HasOne("Domain.Entites.Company", "Company")
+                    b.HasOne("Domain.Entites.Company", null)
                         .WithMany("Leagues")
-                        .HasForeignKey("CompanyId")
+                        .HasForeignKey("CompanyId");
+
+                    b.HasOne("Domain.Entities.Season", "Season")
+                        .WithMany()
+                        .HasForeignKey("SeasonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -474,7 +477,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Company");
+                    b.Navigation("Season");
 
                     b.Navigation("Sport");
                 });
@@ -487,15 +490,15 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.SeasonLeague", "SeasonLeague")
+                    b.HasOne("Domain.Entites.Round", "Round")
                         .WithMany()
-                        .HasForeignKey("SeasonLeagueId")
+                        .HasForeignKey("RoundId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("MatchLocation");
 
-                    b.Navigation("SeasonLeague");
+                    b.Navigation("Round");
                 });
 
             modelBuilder.Entity("Domain.Entites.Round", b =>
@@ -596,22 +599,21 @@ namespace Infrastructure.Migrations
                     b.Navigation("Team");
                 });
 
-            modelBuilder.Entity("Domain.Entities.SeasonLeague", b =>
+            modelBuilder.Entity("Domain.Entities.Season", b =>
                 {
-                    b.HasOne("Domain.Entites.League", null)
-                        .WithMany("SeasonLeagues")
-                        .HasForeignKey("LeagueId")
+                    b.HasOne("Domain.Entites.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Season", null)
-                        .WithMany("SeasonLeagues")
-                        .HasForeignKey("SeasonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Company");
+                });
 
+            modelBuilder.Entity("Domain.Entities.TeamLeague", b =>
+                {
                     b.HasOne("Domain.Entites.Team", null)
-                        .WithMany("SeasonLeagues")
+                        .WithMany("TeamLeagues")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -622,11 +624,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Leagues");
 
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("Domain.Entites.League", b =>
-                {
-                    b.Navigation("SeasonLeagues");
                 });
 
             modelBuilder.Entity("Domain.Entites.Player", b =>
@@ -640,18 +637,13 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("PlayerTeams");
 
-                    b.Navigation("SeasonLeagues");
+                    b.Navigation("TeamLeagues");
                 });
 
             modelBuilder.Entity("Domain.Entities.MatchLocation", b =>
                 {
                     b.Navigation("Match")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Entities.Season", b =>
-                {
-                    b.Navigation("SeasonLeagues");
                 });
 #pragma warning restore 612, 618
         }

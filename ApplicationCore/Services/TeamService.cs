@@ -25,9 +25,9 @@ namespace ApplicationCore.Services
                 Name = teamCreateDTO.Name,
                 MinNumberOfPlayers = teamCreateDTO.MinNumberOfPlayers,
                 MaxNumberOfPlayers = teamCreateDTO.MaxNumberOfPlayers,
-                LogoImage = teamCreateDTO.LogoImage
+                LogoImage = teamCreateDTO.LogoImage,
             };
-            var result = await _teamRepo.AddNewTeam(newTeam);
+            var result = await _teamRepo.AddNewTeam(newTeam, teamCreateDTO.LeagueId);
 
             if(result == 0)
             {
