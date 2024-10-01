@@ -23,8 +23,7 @@ namespace Infrastructure.Repositories
         {
             var teamsInLeagueIds =  await _dbContext.TeamLeagues
                .Where(sl => sl.LeagueId == leagueId)
-                .Select(x => x.TeamId)
-               .Select(x => x.Id)
+               .Select(x => x.TeamId)
                .ToListAsync();
 
             return await _dbContext.Standings
