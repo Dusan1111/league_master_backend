@@ -10,7 +10,6 @@ namespace Domain.Entites
         public int MaxNumberOfPlayers { get; set; }
         public int MinNumberOfPlayers { get; set; }
         public byte[] LogoImage { get; set; }
-
         public List<TeamLeague> TeamLeagues { get; set; }
         public List<PlayerTeam> PlayerTeams { get; }  
     }

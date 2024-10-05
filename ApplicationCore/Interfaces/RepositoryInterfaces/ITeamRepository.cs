@@ -1,4 +1,5 @@
 ﻿using Domain.Entites;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ApplicationCore.Interfaces.RepositoryInterfaces
@@ -8,6 +9,7 @@ namespace ApplicationCore.Interfaces.RepositoryInterfaces
         Task<int> AddNewTeam(Team newTeam, int leagueId);
         Task<int> UpdateTeam(int teamId, Team teamToUpdate);
         Task<Team> GetTeamDetails(int teamId);
+        Task<List<Team>> GetAllTeams();
         Task<int> DeleteTeam(int teamId);
     }
 }

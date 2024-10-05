@@ -2,7 +2,9 @@
 using Domain.Entites;
 using Domain.Entities;
 using League_Master.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
@@ -58,6 +60,11 @@ namespace Infrastructure.Repositories
         public Task<int> DeleteTeam(int teamId)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<List<Team>> GetAllTeams()
+        {
+            return await _dbContext.Teams.ToListAsync();
         }
 
         public Task<Team> GetTeamDetails(int teamId)

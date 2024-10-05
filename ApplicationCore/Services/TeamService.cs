@@ -47,6 +47,19 @@ namespace ApplicationCore.Services
             throw new NotImplementedException();
         }
 
+        public async Task<ResponseBase> GetAllTeams()
+        {
+            var responseBase = new ResponseBase();
+            var teams = await _teamRepo.GetAllTeams();
+
+            if (teams is not null)
+            {
+                responseBase.Data = teams;
+                responseBase.Success = true;
+            }
+            return responseBase;
+        }
+
         public Task<ResponseBase> GetTeamDetails(int teamId)
         {
             throw new NotImplementedException();

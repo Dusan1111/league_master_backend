@@ -10,6 +10,7 @@ namespace ApplicationCore.Interfaces.ServiceInterfaces
         Task<ResponseBase> AddNewTeam(TeamCreateDTO teamCreateDTO);
         Task<ResponseBase> UpdateTeam(int teamId, Team teamToUpdate);
         Task<ResponseBase> GetTeamDetails(int teamId);
+        Task<ResponseBase> GetAllTeams();
         Task<ResponseBase> DeleteTeam(int teamId);
     }
 }

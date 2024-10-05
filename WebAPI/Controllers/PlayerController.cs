@@ -5,8 +5,6 @@ using System;
 using Microsoft.Extensions.Logging;
 using ApplicationCore.Interfaces.ServiceInterfaces;
 using Domain.DTOs;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {

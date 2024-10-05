@@ -131,8 +131,8 @@ builder.Services.AddTransient<ITeamService, TeamService>();
 builder.Services.AddTransient<IStatisticsRepository, StatisticsRepository>();
 builder.Services.AddTransient<IStatisticsService, StatisticsService>();
 
-//builder.Services.AddTransient<ILeagueRepository, LeagueRepository>();
-//builder.Services.AddTransient<ILeagueService, LeagueService>();
+builder.Services.AddTransient<ILeagueRepository, LeagueRepository>();
+builder.Services.AddTransient<ILeagueService, LeagueService>();
 
 builder.Services.AddMvc();
 

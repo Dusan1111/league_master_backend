@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System;
+using ApplicationCore.Services;
 
 namespace WebAPI.Controllers
 {
@@ -28,6 +29,26 @@ namespace WebAPI.Controllers
             try
             {
                 var response = await _teamService.AddNewTeam(teamCreateDTO);
+
+                if (!response.Success)
+                {
+                    return BadRequest(response);
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<ResponseBase>> GetAllTeamsAsync()
+        {
+            try
+            {
+                var response = await _teamService.GetAllTeams();
 
                 if (!response.Success)
                 {

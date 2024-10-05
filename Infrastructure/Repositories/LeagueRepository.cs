@@ -1,7 +1,9 @@
 ﻿using ApplicationCore.Interfaces.RepositoryInterfaces;
 using Domain.Entites;
 using League_Master.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
@@ -49,6 +51,11 @@ namespace Infrastructure.Repositories
         public Task<League> GetLeagueDetails(int leagueId)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<List<League>> GetAllLeagues()
+        {
+            return await _dbContext.Leagues.ToListAsync();
         }
 
         public Task<League> UpdateLeague(int leagueId, League leagueToUpdate)
