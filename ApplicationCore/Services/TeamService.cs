@@ -27,7 +27,7 @@ namespace ApplicationCore.Services
                 MaxNumberOfPlayers = teamCreateDTO.MaxNumberOfPlayers,
                 LogoImage = teamCreateDTO.LogoImage,
             };
-            var result = await _teamRepo.AddNewTeam(newTeam, teamCreateDTO.LeagueId);
+            var result = await _teamRepo.AddNewTeam(newTeam, teamCreateDTO.SeasonLeagueId);
 
             if(result == 0)
             {
@@ -60,14 +60,42 @@ namespace ApplicationCore.Services
             return responseBase;
         }
 
-        public Task<ResponseBase> GetTeamDetails(int teamId)
+        public async Task<ResponseBase> GetTeamDetails(int teamId)
         {
-            throw new NotImplementedException();
+            var responseBase = new ResponseBase();
+            var teamDetails = await _teamRepo.GetTeamDetails(teamId);
+
+            if (teamDetails is not null)
+            {
+                responseBase.Data = teamDetails;
+                responseBase.Success = true;
+            }
+            return responseBase;
         }
 
-        public Task<ResponseBase> UpdateTeam(int teamId, Team teamToUpdate)
+        public async Task<ResponseBase> UpdateTeam(int teamId, TeamCreateDTO teamToUpdate)
         {
-            throw new NotImplementedException();
+            var response = new ResponseBase();
+            Team newPlayer = new Team()
+            {
+                Name = teamToUpdate.Name,
+                MaxNumberOfPlayers = teamToUpdate.MaxNumberOfPlayers,
+                MinNumberOfPlayers = teamToUpdate.MinNumberOfPlayers,
+                LogoImage = teamToUpdate.LogoImage 
+            };
+            var result = await _teamRepo.UpdateTeam(teamId, newPlayer);
+
+            if (result == -1)
+            {
+                response.Message = $"Tim sa ID-em: '{teamId}' ne postoji!";
+            }
+            else
+            {
+                response.Success = true;
+                response.Message = $"Tim sa ID-em: '{teamId}' uspešno ažurirana!";
+                response.Data = teamToUpdate;
+            }
+            return response;
         }
     }
 }

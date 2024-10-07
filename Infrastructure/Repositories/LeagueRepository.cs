@@ -17,7 +17,7 @@ namespace Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<League> AddNewLeague(League leagueToAdd, int numberOfRounds)
+        public async Task<League> AddNewLeague(League leagueToAdd)
         {
             var addedLeague = await _dbContext.Leagues.AddAsync(leagueToAdd);
 

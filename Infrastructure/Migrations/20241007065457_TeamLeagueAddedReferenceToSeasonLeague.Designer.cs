@@ -4,6 +4,7 @@ using League_Master.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(LeagueMasterDbContext))]
-    partial class LeagueMasterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241007065457_TeamLeagueAddedReferenceToSeasonLeague")]
+    partial class TeamLeagueAddedReferenceToSeasonLeague
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -402,8 +405,6 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SeasonLeagueId");
-
                     b.HasIndex("TeamId");
 
                     b.ToTable("TeamLeagues");
@@ -528,12 +529,6 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.TeamLeague", b =>
                 {
-                    b.HasOne("Domain.Entities.SeasonLeague", null)
-                        .WithMany("TeamLeagues")
-                        .HasForeignKey("SeasonLeagueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entites.Team", null)
                         .WithMany("TeamLeagues")
                         .HasForeignKey("TeamId")
@@ -564,11 +559,6 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("Match")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Entities.SeasonLeague", b =>
-                {
-                    b.Navigation("TeamLeagues");
                 });
 #pragma warning restore 612, 618
         }

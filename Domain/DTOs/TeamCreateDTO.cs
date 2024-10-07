@@ -6,6 +6,6 @@
         public int MaxNumberOfPlayers { get; set; }
         public int MinNumberOfPlayers { get; set; }
         public byte[]? LogoImage { get; set; }
-        public int LeagueId { get; set; }
+        public int SeasonLeagueId { get; set; }
     }
 }

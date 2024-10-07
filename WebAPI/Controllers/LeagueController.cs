@@ -28,7 +28,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var response = await _leagueService.AddNewLeague(leagueCreateDTO.LeagueName, leagueCreateDTO.NumberOfRounds);
+                var response = await _leagueService.AddNewLeague(leagueCreateDTO);
 
                 if (!response.Success)
                 {

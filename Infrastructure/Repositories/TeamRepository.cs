@@ -5,6 +5,8 @@ using League_Master.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
@@ -18,7 +20,7 @@ namespace Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<int> AddNewTeam(Team newTeam, int leagueId)
+        public async Task<int> AddNewTeam(Team newTeam, int seasonLeagueId =2)
         {
             var newStanding = new Standing();
             var newTeamLeague = new TeamLeague();
@@ -37,18 +39,19 @@ namespace Infrastructure.Repositories
                         newStanding.TeamId = addedTeamId;
                         await _dbContext.Standings.AddAsync(newStanding);
 
-                        newTeamLeague.TeamId = addedTeamId;
-                        newTeamLeague.LeagueId = leagueId;
+                        //newTeamLeague.TeamId = addedTeamId;
+                        //newTeamLeague.SeasonLeagueId = seasonLeagueId;
 
-                        var addTeamToLeagueResult = await _dbContext.TeamLeagues.AddAsync(newTeamLeague);
+                        //var addTeamToLeagueResult = await _dbContext.TeamLeagues.AddAsync(newTeamLeague);
                         
                         result = await _dbContext.SaveChangesAsync();
 
                     }
                     await dbContextTransaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    result = -1;
                     dbContextTransaction.Rollback(); //Required according to MSDN article 
                     throw; //Not in MSDN article, but recommended so the exception still bubbles up
                 }
@@ -67,14 +70,29 @@ namespace Infrastructure.Repositories
             return await _dbContext.Teams.ToListAsync();
         }
 
-        public Task<Team> GetTeamDetails(int teamId)
+        public async Task<Team> GetTeamDetails(int teamId)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Teams
+                .Where(team => team.Id == teamId)
+                .Include(team => team.PlayerTeams).ThenInclude(x => x.Player)
+                .FirstOrDefaultAsync();
         }
 
-        public Task<int> UpdateTeam(int teamId, Team teamToUpdate)
+        public async Task<int> UpdateTeam(int teamId, Team teamToUpdate)
         {
-            throw new NotImplementedException();
+            var updatedTeam = await _dbContext.Teams.FirstOrDefaultAsync(team => team.Id == teamId);
+
+            if (updatedTeam is not null)
+            {
+                updatedTeam.Name = teamToUpdate.Name;
+                updatedTeam.MaxNumberOfPlayers = teamToUpdate.MaxNumberOfPlayers;
+                updatedTeam.MinNumberOfPlayers = teamToUpdate.MinNumberOfPlayers;
+                updatedTeam.LogoImage = teamToUpdate.LogoImage;
+
+                return await _dbContext.SaveChangesAsync();
+            }
+
+            return -1;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace ApplicationCore.Interfaces.RepositoryInterfaces
 {
     public interface ILeagueRepository
     {
-        Task<League> AddNewLeague(League leagueToAdd, int numberOfRounds);
+        Task<League> AddNewLeague(League leagueToAdd);
         Task<League> UpdateLeague(int leagueId, League leagueToUpdate);
         Task<List<League>> GetAllLeagues();
         Task<League> GetLeagueDetails(int leagueId);

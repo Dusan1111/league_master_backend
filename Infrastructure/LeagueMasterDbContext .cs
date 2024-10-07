@@ -22,9 +22,7 @@ namespace League_Master.Infrastructure
 
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Company> Companies { get; set; }
         public DbSet<League> Leagues { get; set; }
-        public DbSet<Round> Rounds { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<Match> Matches { get; set; }
@@ -34,7 +32,7 @@ namespace League_Master.Infrastructure
         public DbSet<StatisticalCategory> StatisticalCategories { get; set; }
         public DbSet<PlayerStatistics> PlayerStatistics { get; set; }
         public DbSet<MatchLocation> MatchLocations { get; set; }
-        public DbSet<Sport> Sports { get; set; }
         public DbSet<TeamLeague> TeamLeagues { get; set; }
+        public DbSet<SeasonLeague> SesasonLeagues { get; set; }
     }
 }

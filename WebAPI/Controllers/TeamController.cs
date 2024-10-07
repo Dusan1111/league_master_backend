@@ -39,7 +39,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Došlo je do greške prilikom čuvanja tima!");
             }
         }
 
@@ -62,5 +62,48 @@ namespace WebAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("Get Details{teamId}")]
+        public async Task<ActionResult<ResponseBase>> GetTeamDetailsAsync(int teamId)
+        {
+            try
+            {
+                var response = await _teamService.GetTeamDetails(teamId);
+
+                if (!response.Success)
+                {
+                    return BadRequest(response);
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpPut("Update{teamId}")]
+        public async Task<ActionResult<ResponseBase>> UpdateTeamAsync(int teamId, TeamCreateDTO teamToUpdate)
+        {
+            try
+            {
+                var response = await _teamService.UpdateTeam(teamId, teamToUpdate);
+
+                if (!response.Success)
+                {
+                    return BadRequest(response);
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
     }
 }

@@ -7,7 +7,7 @@ namespace Domain.Entities
         public int Id { get; set; }
         public int TeamId { get; set; }
         public Team Team { get; }
-        public int LeagueId { get; set; }
-        public League League { get; }
+        public int SeasonLeagueId { get; set; }
+        public SeasonLeague SeasonLeague { get; }
     }
 }

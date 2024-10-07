@@ -19,15 +19,16 @@ namespace ApplicationCore.Services
         {
             _leagueRepo = leagueRepo;
         }
-        public async Task<ResponseBase> AddNewLeague(string leagueName, int numberOfRounds)
+
+        public async Task<ResponseBase> AddNewLeague(LeagueCreateDTO leagueCreateDTO)
         {
             var response = new ResponseBase();
             League newLeague = new League()
             {
-                Name = leagueName,
-                SportId = 1
+                Name = leagueCreateDTO.Name,
+                NumberOfRounds = leagueCreateDTO.NumberOfRounds
             };
-            var result = await _leagueRepo.AddNewLeague(newLeague, numberOfRounds);
+            var result = await _leagueRepo.AddNewLeague(newLeague);
 
             if (result is null)
             {

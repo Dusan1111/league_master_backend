@@ -8,7 +8,7 @@ namespace ApplicationCore.Interfaces.ServiceInterfaces
     public interface ITeamService
     {
         Task<ResponseBase> AddNewTeam(TeamCreateDTO teamCreateDTO);
-        Task<ResponseBase> UpdateTeam(int teamId, Team teamToUpdate);
+        Task<ResponseBase> UpdateTeam(int teamId, TeamCreateDTO teamToUpdate);
         Task<ResponseBase> GetTeamDetails(int teamId);
         Task<ResponseBase> GetAllTeams();
         Task<ResponseBase> DeleteTeam(int teamId);
