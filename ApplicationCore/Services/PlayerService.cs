@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Interfaces.RepositoryInterfaces;
 using ApplicationCore.Interfaces.ServiceInterfaces;
+using AutoMapper;
 using Domain.Core.Responses;
 using Domain.DTOs;
 using Domain.Entites;
@@ -11,19 +12,19 @@ namespace ApplicationCore.Services
     public class PlayerService : IPlayerService
     {
         private readonly IPlayerRepository _playerRepo;
-        public PlayerService(IPlayerRepository playerRepo)
+        private readonly IMapper _mapper;
+
+        public PlayerService(IPlayerRepository playerRepo, IMapper mapper)
         {
             _playerRepo = playerRepo;
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<ResponseBase> AddNewPlayer(PlayerCreateDTO playerCreateDTO)
         {
             var response = new ResponseBase();
-            Player newPlayer = new Player()
-            {
-                Name = playerCreateDTO.Name,
-                Lastname = playerCreateDTO.Lastname,
-            };
+            var newPlayer  = _mapper.Map<Player>(playerCreateDTO);
+
             var result = await _playerRepo.AddNewPlayer(newPlayer, playerCreateDTO.TeamId, playerCreateDTO.LeagueId);
 
             if (result == -1)
@@ -38,11 +39,13 @@ namespace ApplicationCore.Services
             {
                 response.Message = $"Tim sa ID-em: '{ playerCreateDTO.TeamId }' ne postoji!";
             }
-            else if (result == 1)
+            else if (result > 0)
             {
+                var newPlayerDto = _mapper.Map<PlayerDetailsDTO>(newPlayer);
+                newPlayerDto.Id = result;
                 response.Success = true;
                 response.Message = "Igrač je uspešno dodat!";
-                response.Data = newPlayer;
+                response.Data = newPlayerDto;
             }
             return response;
         }

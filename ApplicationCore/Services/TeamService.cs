@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Interfaces.RepositoryInterfaces;
 using ApplicationCore.Interfaces.ServiceInterfaces;
+using AutoMapper;
 using Domain.Core.Responses;
 using Domain.DTOs;
 using Domain.Entites;
@@ -10,23 +11,20 @@ namespace ApplicationCore.Services
 {
     public class TeamService : ITeamService
     {
-        private readonly ITeamRepository _teamRepo;  
+        private readonly ITeamRepository _teamRepo;
+        private readonly IMapper _mapper;
 
-        public TeamService(ITeamRepository teamRepo)
+        public TeamService(ITeamRepository teamRepo, IMapper mapper)
         {
             _teamRepo = teamRepo;
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<ResponseBase> AddNewTeam(TeamCreateDTO teamCreateDTO)
         {
             var response = new ResponseBase();
-            Team newTeam = new Team()
-            {
-                Name = teamCreateDTO.Name,
-                MinNumberOfPlayers = teamCreateDTO.MinNumberOfPlayers,
-                MaxNumberOfPlayers = teamCreateDTO.MaxNumberOfPlayers,
-                LogoImage = teamCreateDTO.LogoImage,
-            };
+            var newTeam = _mapper.Map<Team>(teamCreateDTO);
+
             var result = await _teamRepo.AddNewTeam(newTeam, teamCreateDTO.SeasonLeagueId);
 
             if(result == 0)
@@ -63,11 +61,14 @@ namespace ApplicationCore.Services
         public async Task<ResponseBase> GetTeamDetails(int teamId)
         {
             var responseBase = new ResponseBase();
-            var teamDetails = await _teamRepo.GetTeamDetails(teamId);
 
-            if (teamDetails is not null)
+            var teamEntityDetails = await _teamRepo.GetTeamDetails(teamId);
+            
+            var teamDtoDetails = _mapper.Map<TeamDetailsDTO>(teamEntityDetails);
+
+            if (teamDtoDetails is not null)
             {
-                responseBase.Data = teamDetails;
+                responseBase.Data = teamDtoDetails;
                 responseBase.Success = true;
             }
             return responseBase;
@@ -76,14 +77,9 @@ namespace ApplicationCore.Services
         public async Task<ResponseBase> UpdateTeam(int teamId, TeamCreateDTO teamToUpdate)
         {
             var response = new ResponseBase();
-            Team newPlayer = new Team()
-            {
-                Name = teamToUpdate.Name,
-                MaxNumberOfPlayers = teamToUpdate.MaxNumberOfPlayers,
-                MinNumberOfPlayers = teamToUpdate.MinNumberOfPlayers,
-                LogoImage = teamToUpdate.LogoImage 
-            };
-            var result = await _teamRepo.UpdateTeam(teamId, newPlayer);
+            var updatedTeam = _mapper.Map<Team>(teamToUpdate);
+
+            var result = await _teamRepo.UpdateTeam(teamId, updatedTeam);
 
             if (result == -1)
             {

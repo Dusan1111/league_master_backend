@@ -119,6 +119,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 builder.Services.AddTransient<IAuthenticationRepository, AuthenticationRepository>(); 
 builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 

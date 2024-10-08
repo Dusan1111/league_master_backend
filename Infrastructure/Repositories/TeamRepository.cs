@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
@@ -75,6 +74,7 @@ namespace Infrastructure.Repositories
             return await _dbContext.Teams
                 .Where(team => team.Id == teamId)
                 .Include(team => team.PlayerTeams).ThenInclude(x => x.Player)
+                //.Include(team => team.TeamLeagues).ThenInclude(x => x.SeasonLeague)
                 .FirstOrDefaultAsync();
         }
 

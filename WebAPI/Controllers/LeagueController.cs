@@ -64,7 +64,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{leagueId}")]
-        public async Task<ActionResult<ResponseBase>> GetPlayerDetailsAsync(int leagueId)
+        public async Task<ActionResult<ResponseBase>> GetPlayerLeagueAsync(int leagueId)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{leagueId}")]
-        public async Task<ActionResult<ResponseBase>> UpdatePlayerAsync(int leagueId, LeagueCreateDTO leagueToUpdate)
+        public async Task<ActionResult<ResponseBase>> UpdateLeagueAsync(int leagueId, LeagueCreateDTO leagueToUpdate)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace WebAPI.Controllers
 
 
         [HttpDelete("{leagueId}")]
-        public async Task<ActionResult<ResponseBase>> DeletePlayerAsync(int leagueId)
+        public async Task<ActionResult<ResponseBase>> DeleteLeagueAsync(int leagueId)
         {
             try
             {

@@ -54,7 +54,7 @@ namespace Infrastructure.Repositories
                     await _dbContext.SaveChangesAsync();
                     await dbContextTransaction.CommitAsync();
 
-                    return 1;
+                    return addedPlayer.Entity.Id;
                 }
 
                 catch (Exception ex)
@@ -125,10 +125,12 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.PlayerTeams
                 .AnyAsync(playerTeam => playerTeam.LeagueId == leagueId
-                 && playerTeam.TeamId == teamId
+                     && playerTeam.TeamId == teamId 
+                     && playerTeam.Player.Name.Equals(firstName)
+                     && playerTeam.Player.Lastname.Equals(lastName)
                   // Include ne radi proveriti zašto
-                  // && playerTeam.Name.Equals(umnc)
-                  //  && playerTeam.UMNC.Equals(umnc)
+                  //&& playerTeam.Name.Equals(umnc)
+                  // && playerTeam.UMNC.Equals(umnc)
 
                   );
         }
