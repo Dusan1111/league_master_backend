@@ -5,6 +5,7 @@ using Domain.Core.Responses;
 using Domain.DTOs;
 using Domain.Entites;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ApplicationCore.Services
@@ -12,12 +13,14 @@ namespace ApplicationCore.Services
     public class TeamService : ITeamService
     {
         private readonly ITeamRepository _teamRepo;
+        private readonly ILeagueRepository _leagueRepo;
         private readonly IMapper _mapper;
 
-        public TeamService(ITeamRepository teamRepo, IMapper mapper)
+        public TeamService(ITeamRepository teamRepo, ILeagueRepository leagueRepo, IMapper mapper)
         {
             _teamRepo = teamRepo;
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _leagueRepo = leagueRepo;
         }
 
         public async Task<ResponseBase> AddNewTeam(TeamCreateDTO teamCreateDTO)
@@ -65,6 +68,8 @@ namespace ApplicationCore.Services
             var teamEntityDetails = await _teamRepo.GetTeamDetails(teamId);
             
             var teamDtoDetails = _mapper.Map<TeamDetailsDTO>(teamEntityDetails);
+
+            teamDtoDetails.Leagues = _mapper.Map<List<LeagueDetailsDTO>>(await _leagueRepo.GetAllLeagues());
 
             if (teamDtoDetails is not null)
             {

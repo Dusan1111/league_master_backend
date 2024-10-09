@@ -19,5 +19,7 @@ namespace Domain.DTOs
         public int SeasonLeagueId { get; set; }
         public int LeagueId { get; set; }
         public List<PlayerDetailsDTO> Players { get; set; }
+
+        public List<LeagueDetailsDTO> Leagues { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using Domain.Entities;
 using League_Master.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -127,12 +128,14 @@ namespace Infrastructure.Repositories
                 .AnyAsync(playerTeam => playerTeam.LeagueId == leagueId
                      && playerTeam.TeamId == teamId 
                      && playerTeam.Player.Name.Equals(firstName)
-                     && playerTeam.Player.Lastname.Equals(lastName)
-                  // Include ne radi proveriti zašto
-                  //&& playerTeam.Name.Equals(umnc)
-                  // && playerTeam.UMNC.Equals(umnc)
+                     && playerTeam.Player.Lastname.Equals(lastName));
+        }
 
-                  );
+        public async Task<List<Player>> GetAllPlayers()
+        {
+            return await _dbContext.Players
+                .Include(p => p.PlayerTeams).ThenInclude(pt => pt.Team)
+                .ToListAsync();
         }
     }
 }

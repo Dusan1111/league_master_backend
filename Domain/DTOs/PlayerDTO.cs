@@ -15,4 +15,13 @@
         public string Lastname { get; set; }
         public int JerseyNumber { get; set; }
     }
+
+    public class PlayerRecordDTO
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Lastname { get; set; }
+        public string TeamNames { get; set; }
+
+    }
 }

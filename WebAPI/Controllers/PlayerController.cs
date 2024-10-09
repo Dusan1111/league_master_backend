@@ -5,6 +5,7 @@ using System;
 using Microsoft.Extensions.Logging;
 using ApplicationCore.Interfaces.ServiceInterfaces;
 using Domain.DTOs;
+using ApplicationCore.Services;
 
 namespace WebAPI.Controllers
 {
@@ -28,6 +29,26 @@ namespace WebAPI.Controllers
             try
             {
                 var response = await _playerService.AddNewPlayer(playerCreateDTO);
+
+                if (!response.Success)
+                {
+                    return BadRequest(response);
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<ResponseBase>> GetAllPlayersAsync()
+        {
+            try
+            {
+                var response = await _playerService.GetAllPlayers();
 
                 if (!response.Success)
                 {

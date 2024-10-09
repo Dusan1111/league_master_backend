@@ -8,6 +8,7 @@ namespace ApplicationCore.Interfaces.ServiceInterfaces
     {
         Task<ResponseBase> AddNewPlayer(PlayerCreateDTO playerDTO);
         Task<ResponseBase> UpdatePlayer(int playerId, PlayerCreateDTO playerToUpdate);
+        Task<ResponseBase> GetAllPlayers();
         Task<ResponseBase> GetPlayerDetails(int playerId);
         Task<ResponseBase> DeletePlayer(int playerId);
     }

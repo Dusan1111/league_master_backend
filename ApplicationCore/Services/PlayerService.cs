@@ -5,6 +5,7 @@ using Domain.Core.Responses;
 using Domain.DTOs;
 using Domain.Entites;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ApplicationCore.Services
@@ -63,6 +64,25 @@ namespace ApplicationCore.Services
             {
                 response.Message = $"Igrač sa ID-em: '{playerId}' je obrisan!";
                 response.Data = playerId;
+            }
+            return response;
+        }
+
+        public async Task<ResponseBase> GetAllPlayers()
+        {
+            var response = new ResponseBase();
+            var result = await _playerRepo.GetAllPlayers();
+
+            var playersDtoList = _mapper.Map<List<PlayerRecordDTO>>(result);
+
+            if (result is null)
+            {
+                response.Message = $"Igrači ne postoje!";
+            }
+            else
+            {
+                response.Data = playersDtoList;
+                response.Success = true;
             }
             return response;
         }

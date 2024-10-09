@@ -55,7 +55,9 @@ namespace Infrastructure.Repositories
 
         public async Task<List<League>> GetAllLeagues()
         {
-            return await _dbContext.Leagues.ToListAsync();
+            return await _dbContext.Leagues
+                .Include(sl => sl.SeasonLeagues).ThenInclude(sl => sl.Season)
+                .ToListAsync();
         }
 
         public Task<League> UpdateLeague(int leagueId, League leagueToUpdate)
