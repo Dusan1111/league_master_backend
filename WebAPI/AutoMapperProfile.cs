@@ -10,12 +10,7 @@ namespace League_Master.API
         public AutoMapperProfile()
         {
 
-            CreateMap<LeagueDetailsDTO, League>().ReverseMap()
-                .ForMember(dest => dest.SeasonName, opt => opt
-                    .MapFrom((src, dest) => src.SeasonLeagues
-                        .Where(sl => sl.LeagueId == dest.Id)
-                        .Select(sl => sl.Season.Name) 
-                        .FirstOrDefault())); 
+            CreateMap<LeagueDetailsDTO, League>().ReverseMap();
 
             CreateMap<PlayerCreateDTO, Player>().ReverseMap();
             CreateMap<PlayerDetailsDTO, Player>().ReverseMap();

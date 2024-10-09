@@ -68,8 +68,22 @@ namespace ApplicationCore.Services
             var teamEntityDetails = await _teamRepo.GetTeamDetails(teamId);
             
             var teamDtoDetails = _mapper.Map<TeamDetailsDTO>(teamEntityDetails);
+            teamDtoDetails.Leagues = new List<LeagueDetailsDTO>();
 
-            teamDtoDetails.Leagues = _mapper.Map<List<LeagueDetailsDTO>>(await _leagueRepo.GetAllLeagues());
+            var leagues =  await _leagueRepo.GetAllLeagues();
+
+            foreach(var league in leagues)
+            {
+                foreach (var seasonLeague in league.SeasonLeagues)
+                {
+                    var leagueDto = new LeagueDetailsDTO()
+                    {
+                        Id = league.Id,
+                        Name = league.Name + ", " + seasonLeague.Season.Name
+                    };
+                   teamDtoDetails.Leagues.Add(leagueDto);
+                }
+            }
 
             if (teamDtoDetails is not null)
             {
