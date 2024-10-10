@@ -18,6 +18,10 @@ namespace League_Master.Infrastructure
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(LeagueMasterDbContext).Assembly);
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<SeasonLeague>()
+                .Property(o => o.Status)
+                .HasConversion<string>();
         }
 
         public DbSet<Role> Roles { get; set; }

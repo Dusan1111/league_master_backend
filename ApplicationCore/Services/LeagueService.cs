@@ -1,12 +1,11 @@
 ﻿using ApplicationCore.Interfaces.RepositoryInterfaces;
 using ApplicationCore.Interfaces.ServiceInterfaces;
+using AutoMapper;
 using Domain.Core.Responses;
 using Domain.DTOs;
 using Domain.Entites;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ApplicationCore.Services
@@ -14,10 +13,11 @@ namespace ApplicationCore.Services
     public class LeagueService : ILeagueService
     {
         private readonly ILeagueRepository _leagueRepo;
-
-        public LeagueService(ILeagueRepository leagueRepo)
+        private readonly IMapper _mapper;
+        public LeagueService(ILeagueRepository leagueRepo, IMapper mapper)
         {
             _leagueRepo = leagueRepo;
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<ResponseBase> AddNewLeague(LeagueCreateDTO leagueCreateDTO)
@@ -26,7 +26,6 @@ namespace ApplicationCore.Services
             League newLeague = new League()
             {
                 Name = leagueCreateDTO.Name,
-                NumberOfRounds = leagueCreateDTO.NumberOfRounds
             };
             var result = await _leagueRepo.AddNewLeague(newLeague);
 
@@ -43,9 +42,23 @@ namespace ApplicationCore.Services
             return response;
         }
 
-        public Task<ResponseBase> DeleteLeague(int leagueId)
+        public Task<int> DeleteLeague(int leagueId)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<ResponseBase> GetCompetitions()
+        {
+            var responseBase = new ResponseBase();
+            var competitions = await _leagueRepo.GetAllCompetitions();
+            var competitionDtoList =  _mapper.Map<List<CompetitionRecordDTO>>(competitions);
+
+            if (competitions is not null)
+            {
+                responseBase.Data = competitionDtoList;
+                responseBase.Success = true;
+            }
+            return responseBase;
         }
 
         public Task<ResponseBase> GetLeagueDetails(int leagueId)
@@ -57,10 +70,25 @@ namespace ApplicationCore.Services
         {
             var responseBase = new ResponseBase();
             var leagues = await _leagueRepo.GetAllLeagues();
+            var leagueDtoList = _mapper.Map<List<LeagueRecordDTO>>(leagues);
 
-            if(leagues is not null)
+            if (leagues is not null)
             {
-                responseBase.Data = leagues;
+                responseBase.Data = leagueDtoList;
+                responseBase.Success = true;
+            }
+            return responseBase;
+        }
+
+        public async Task<ResponseBase> GetSeasons()
+        {
+            var responseBase = new ResponseBase();
+            var seasons = await _leagueRepo.GetAllSeasons();
+            var seasonDtoList = _mapper.Map<List<SeasonRecordDTO>>(seasons);
+
+            if (seasonDtoList is not null)
+            {
+                responseBase.Data = seasonDtoList;
                 responseBase.Success = true;
             }
             return responseBase;

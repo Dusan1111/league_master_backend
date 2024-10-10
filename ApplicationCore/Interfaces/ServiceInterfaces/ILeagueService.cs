@@ -10,6 +10,9 @@ namespace ApplicationCore.Interfaces.ServiceInterfaces
         Task<ResponseBase> UpdateLeague(int leagueId, LeagueCreateDTO leagueToUpdate);
         Task<ResponseBase> GetLeagues();
         Task<ResponseBase> GetLeagueDetails(int leagueId);
-        Task<ResponseBase> DeleteLeague(int leagueId);
+        Task<int> DeleteLeague(int leagueId);
+        Task<ResponseBase> GetCompetitions();
+        Task<ResponseBase> GetSeasons();
+        
     }
 }

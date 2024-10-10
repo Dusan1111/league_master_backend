@@ -1,34 +1,34 @@
-﻿using ApplicationCore.Interfaces.ServiceInterfaces;
-using Domain.Core.Responses;
-using Domain.DTOs;
-using League_Master.WebAPI.Controllers;
+﻿using Domain.Core.Responses;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Threading.Tasks;
+using System;
+using Microsoft.Extensions.Logging;
+using ApplicationCore.Interfaces.ServiceInterfaces;
+using Domain.DTOs;
+using ApplicationCore.Services;
 
-namespace WebAPI.Controllers
+namespace WebAPI.Controllers.AdminPanel
 {
-    [ApiController]
     [Route("api/[controller]")]
-    public class LeagueController : ControllerBase
+    [ApiController]
+    public class PlayerController : ControllerBase
     {
-        private readonly ILeagueService _leagueService;
-        private readonly ILogger<AuthenticationController> _logger;
+        private readonly IPlayerService _playerService;
+        private readonly ILogger<PlayerController> _logger;
 
-        public LeagueController(ILeagueService leagueService, ILogger<AuthenticationController> logger)
+        public PlayerController(IPlayerService playerService, ILogger<PlayerController> logger)
         {
-            _leagueService = leagueService ?? throw new ArgumentNullException(nameof(leagueService));
+            _playerService = playerService ?? throw new ArgumentNullException(nameof(playerService));
             _logger = logger;
         }
 
         [HttpPost("Add")]
         //   [Authorize(Policy = "RequireAdministratorRole")]
-        public async Task<ActionResult<ResponseBase>> AddAsync(LeagueCreateDTO leagueCreateDTO)
+        public async Task<ActionResult<ResponseBase>> AddAsync(PlayerCreateDTO playerCreateDTO)
         {
             try
             {
-                var response = await _leagueService.AddNewLeague(leagueCreateDTO);
+                var response = await _playerService.AddNewPlayer(playerCreateDTO);
 
                 if (!response.Success)
                 {
@@ -44,11 +44,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ResponseBase>> GetLeaguesAsync()
+        public async Task<ActionResult<ResponseBase>> GetAllPlayersAsync()
         {
             try
             {
-                var response = await _leagueService.GetLeagues();
+                var response = await _playerService.GetAllPlayers();
 
                 if (!response.Success)
                 {
@@ -63,12 +63,12 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("{leagueId}")]
-        public async Task<ActionResult<ResponseBase>> GetPlayerLeagueAsync(int leagueId)
+        [HttpGet("{playerId}")]
+        public async Task<ActionResult<ResponseBase>> GetPlayerDetailsAsync(int playerId)
         {
             try
             {
-                var response = await _leagueService.GetLeagueDetails(leagueId);
+                var response = await _playerService.GetPlayerDetails(playerId);
 
                 if (!response.Success)
                 {
@@ -83,12 +83,12 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("{leagueId}")]
-        public async Task<ActionResult<ResponseBase>> UpdateLeagueAsync(int leagueId, LeagueCreateDTO leagueToUpdate)
+        [HttpPut("{playerId}")]
+        public async Task<ActionResult<ResponseBase>> UpdatePlayerAsync(int playerId, PlayerCreateDTO playerToUpdate)
         {
             try
             {
-                var response = await _leagueService.UpdateLeague(leagueId, leagueToUpdate);
+                var response = await _playerService.UpdatePlayer(playerId, playerToUpdate);
 
                 if (!response.Success)
                 {
@@ -104,12 +104,12 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpDelete("{leagueId}")]
-        public async Task<ActionResult<ResponseBase>> DeleteLeagueAsync(int leagueId)
+        [HttpDelete("{playerId}")]
+        public async Task<ActionResult<ResponseBase>> DeletePlayerAsync(int playerId)
         {
             try
             {
-                var response = await _leagueService.DeleteLeague(leagueId);
+                var response = await _playerService.DeletePlayer(playerId);
 
                 if (!response.Success)
                 {

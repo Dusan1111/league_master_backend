@@ -1,17 +1,17 @@
-﻿namespace Domain.DTOs
+﻿
+namespace Domain.DTOs
 {
-    public class LeagueCreateDTO
+    public class SeasonCreateDTO
     {
         public string Name { get; set; }
     }
 
-    public class LeagueDetailsDTO
+    public class SeasonDetialsDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
     }
-
-    public class LeagueRecordDTO
+    public class SeasonRecordDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }

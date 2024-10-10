@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System;
 
-namespace WebAPI.Controllers
+namespace WebAPI.Controllers.AdminPanel
 {
     [Route("api/[controller]")]
     [ApiController]

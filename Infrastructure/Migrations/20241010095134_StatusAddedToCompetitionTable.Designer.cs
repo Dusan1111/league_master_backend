@@ -4,6 +4,7 @@ using League_Master.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(LeagueMasterDbContext))]
-    partial class LeagueMasterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241010095134_StatusAddedToCompetitionTable")]
+    partial class StatusAddedToCompetitionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -354,10 +357,10 @@ namespace Infrastructure.Migrations
                     b.Property<int>("LeagueId")
                         .HasColumnType("int");
 
-                    b.Property<int>("NumberOfPlayOffRounds")
+                    b.Property<int>("NumberOfRounds")
                         .HasColumnType("int");
 
-                    b.Property<int>("NumberOfRounds")
+                    b.Property<int>("NumberPlayOffRounds")
                         .HasColumnType("int");
 
                     b.Property<int>("SeasonId")
